@@ -1,0 +1,7 @@
+# Build
+.task
+build
+
+# IDEs
+.idea
+.vscode
