@@ -88,7 +88,7 @@ tasks:
           EXCLUDE_PATTERNS: *emsdk_checksum_exclude_paths
           INCLUDE_PATTERNS: ["{{.OUTPUT_DIR}}"]
 
-  install-zstd:
+  download-zstd:
     internal: true
     vars:
       LIB_NAME: "zstd"
@@ -113,7 +113,7 @@ tasks:
       - "{{.ZSTD_SINGLE_FILE_OUTPUT_FILE}}"
       - "{{.ZSTD_WASM_CMAKE_FILE}}"
     deps:
-      - "install-zstd"
+      - "download-zstd"
     cmds:
       - "mkdir -p '{{.G_DEPS_DIR}}/zstd-single-file'"
       - |-
