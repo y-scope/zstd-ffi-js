@@ -25,7 +25,7 @@ task zstd-wasm
 ```
 
 The task first runs `:deps:download-zstd` to fetch the latest Zstandard source code, then executes
-`:generate-zstd-single-file-lib` to produce the single-file library. Finally, it builds the CMake
+`:deps:install-zstd-single-file` to produce the single-file library. Finally, it builds the CMake
 project, which uses Emscripten to expose the bindings to JavaScript.
 
 To clean the build:
