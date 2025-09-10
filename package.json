@@ -1,0 +1,23 @@
+{
+  "name": "@yscope/zstd-ffi-js",
+  "version": "0.0.1",
+  "description": "A TypeScript/JavaScript Zstandard library with decompression support and planned compression support",
+  "type": "module",
+  "author": "YScope Inc. <dev@yscope.com>",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/y-scope/zstd-ffi-js#readme",
+  "bugs": {
+    "url": "https://github.com/y-scope/zstd-ffi-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/y-scope/zstd-ffi-js.git"
+  },
+  "keywords": [
+    "zstd",
+    "zstandard",
+    "wasm",
+    "webassembly",
+    "decompression"
+  ]
+}

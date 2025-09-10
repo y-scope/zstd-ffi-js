@@ -1,0 +1,89 @@
+version: "3"
+
+includes:
+  deps: "taskfiles/deps.yaml"
+  utils: "tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
+
+vars:
+  G_BUILD_DIR: "{{.ROOT_DIR}}/build"
+  G_DEPS_DIR: "{{.G_BUILD_DIR}}/deps"
+  G_EMSDK_DIR: "{{.G_BUILD_DIR}}/emsdk"
+  G_ZSTD_WASM_BUILD_DIR: "{{.G_BUILD_DIR}}/zstd-wasm"
+
+  G_ZSTD_WASM_ENV_NAMES: ["node", "worker"]
+  G_ZSTD_WASM_TARGET_PREFIX: "zstd-wasm-"
+
+  # These should be kept in-sync with their usage in CMakeLists.txt
+  G_DEPS_CMAKE_SETTINGS_DIR: "{{.G_DEPS_DIR}}/cmake-settings"
+  G_DEPS_CMAKE_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/settings.cmake"
+
+  G_DEPS_CHECKSUM: "{{.G_BUILD_DIR}}/deps.md5"
+  G_ZSTD_WASM_CHECKSUM: "{{.G_BUILD_DIR}}/zstd-wasm.md5"
+
+tasks:
+  default:
+    deps: ["zstd-wasm"]
+
+  clean:
+    cmds:
+      - task: "clean-zstd-wasm"
+      - task: "deps:clean"
+      - "rm -rf '{{.G_BUILD_DIR}}'"
+
+  clean-zstd-wasm:
+    cmds:
+      - "rm -rf '{{.G_ZSTD_WASM_BUILD_DIR}}'"
+
+  zstd-wasm:
+    cmds:
+      - task: "zstd-wasm-generate"
+      - task: "zstd-wasm-build"
+
+  zstd-wasm-generate:
+    internal: true
+    sources: &zstd_wasm_source_files
+      - "{{.G_DEPS_CHECKSUM}}"
+      - "{{.TASKFILE}}"
+      - "CMakeLists.txt"
+    generates:
+      - "{{.G_ZSTD_WASM_BUILD_DIR}}/CMakeCache.txt"
+    deps:
+      - "deps"
+    cmds:
+      - task: "utils:cmake:generate"
+        vars:
+          BUILD_DIR: "{{.G_ZSTD_WASM_BUILD_DIR}}"
+          SOURCE_DIR: "{{.ROOT_DIR}}"
+          EXTRA_ARGS:
+            - '-DZSTD_WASM_SUPPORTED_ENVIRONMENTS="{{.G_ZSTD_WASM_ENV_NAMES | join ";"}}"'
+
+  zstd-wasm-build:
+    internal: true
+    vars:
+      CHECKSUM_FILE: "{{.G_ZSTD_WASM_CHECKSUM}}"
+      OUTPUT_DIR: "{{.G_ZSTD_WASM_BUILD_DIR}}"
+    sources: *zstd_wasm_source_files
+    generates: ["{{.CHECKSUM_FILE}}"]
+    deps:
+      - task: "utils:checksum:validate"
+        vars:
+          CHECKSUM_FILE: "{{.CHECKSUM_FILE}}"
+          INCLUDE_PATTERNS: ["{{.OUTPUT_DIR}}"]
+    cmds:
+      - task: "utils:cmake:build"
+        vars:
+          BUILD_DIR: "{{.OUTPUT_DIR}}"
+          # Use `--clean-first` to ensure all outputs are rebuilt, since Emscripten's toolchain
+          # file does not correctly track all generated output files.
+          EXTRA_ARGS: ["--clean-first"]
+      # This command must be last
+      - task: "utils:checksum:compute"
+        vars:
+          CHECKSUM_FILE: "{{.CHECKSUM_FILE}}"
+          INCLUDE_PATTERNS: ["{{.OUTPUT_DIR}}"]
+
+  init:
+    internal: true
+    silent: true
+    run: "once"
+    cmds: ["mkdir -p '{{.G_BUILD_DIR}}'"]
