@@ -1,6 +1,6 @@
-# Building `zstd-wasm`
+# Building the project
 
-This document explains how to build the Zstandard WASM library `zstd-wasm` from source.
+This document explains how to build the project.
 
 ## Requirements
 * CMake 3.16 or higher

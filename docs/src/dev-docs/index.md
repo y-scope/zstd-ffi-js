@@ -8,6 +8,13 @@ specific docs.
 :gutter: 2
 
 :::{grid-item-card}
+:link: building-project
+Building the project
+^^^
+How to build zstd-ffi-js.
+:::
+
+:::{grid-item-card}
 :link: contributing
 Contributing
 ^^^
@@ -25,6 +32,7 @@ How to test zstd-ffi-js.
 :::{toctree}
 :hidden:
 
+building-project.md
 contributing.md
 testing.md
 :::
