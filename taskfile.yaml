@@ -2,6 +2,7 @@ version: "3"
 
 includes:
   deps: "taskfiles/deps.yaml"
+  docs: "taskfiles/docs.yaml"
   utils: "tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
 
 vars:
@@ -86,4 +87,5 @@ tasks:
     internal: true
     silent: true
     run: "once"
-    cmds: ["mkdir -p '{{.G_BUILD_DIR}}'"]
+    cmds:
+      - "mkdir -p '{{.G_BUILD_DIR}}'"

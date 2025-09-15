@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "description": "A TypeScript/JavaScript Zstandard library with decompression support and planned compression support",
   "type": "module",
+  "scripts": {
+    "docs": "npm run docs:serve",
+    "docs:build": "task docs:site",
+    "docs:serve": "task docs:serve"
+  },
   "author": "YScope Inc. <dev@yscope.com>",
   "license": "Apache-2.0",
   "homepage": "https://github.com/y-scope/zstd-ffi-js#readme",
